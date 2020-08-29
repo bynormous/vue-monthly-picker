@@ -18,7 +18,7 @@
         <div class="picker" style="text-align: center">
           <div class="flexbox">
             <span class="prev" @click="prevYear" :class="{deactive: !canBack}"></span>
-            <div>{{year}}</div>
+            <div><input type="text" class="yearClass" v-model="year" @blur="onYearBlur" @keyup.enter="onYearBlur"></inputs></div>
             <span class="next" @click="nextYear" :class="{deactive: !canNext}"></span>
           </div>
           <div class="flexbox monthItem">
@@ -157,6 +157,19 @@ export default {
     }
   },
   methods: {
+    onYearBlur () {
+      if (isNaN(this.year)) {
+        this.year = moment().format('YYYY')
+      } else {
+        this.year = parseInt(this.year, 10)
+        if (this.year < 1900) {
+          this.year = 1900
+        } else if (this.year > 2200) {
+          this.year = 2200
+        }
+      }
+      this.selectPicker()
+    },
     init () {
       document.addEventListener('click', (e) => {
         if (this.$el && !this.$el.contains(e.target)) {
@@ -371,6 +384,11 @@ $lightgray: #d4d4d4;
         border-right: 10px solid #999999;
       }
     }
+  }
+
+  input.yearClass {
+    width: 100px;
+    text-align: center;
   }
 
   .input {
